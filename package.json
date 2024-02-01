@@ -1,0 +1,24 @@
+{
+  "name": "mongo-s3-dump",
+  "version": "0.1.0",
+  "description": "This project automates the backup process of a MongoDB database and uploads the backup file to AWS S3",
+  "main": "script.ts",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "tsc",
+    "start": "node dist/script.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/node": "^20.11.16",
+    "typescript": "^5.3.3"
+  },
+  "dependencies": {
+    "@aws-sdk/lib-storage": "^3.504.0",
+    "aws-sdk": "^2.1548.0",
+    "dotenv": "^16.4.1",
+    "mongodb": "^6.3.0",
+    "node-cron": "^3.0.3"
+  }
+}
