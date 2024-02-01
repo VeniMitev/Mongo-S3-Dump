@@ -2,17 +2,9 @@
 
 First off, thank you for considering contributing to Mongo S3 Dump. It's people like you that make Mongo S3 Dump such a great tool.
 
-## Code of Conduct
-
-This project and everyone participating in it is governed by the [Mongo S3 Dump Code of Conduct](CODE_OF_CONDUCT.md). By participating, you are expected to uphold this code. Please report unacceptable behavior to [project-email@example.com].
-
 ## I don't want to read this whole thing I just have a question!!!
 
 > Note: Please don't file an issue to ask a question. You'll get faster results by using the resources below.
-
-We have an official message board where the community chimes in with helpful advice if you have questions.
-
-* [Discussion Forum](https://www.example.com)
 
 ## What should I know before I get started?
 
@@ -32,7 +24,7 @@ This section guides you through submitting a bug report. Following these guideli
 
 **How Do I Submit A (Good) Bug Report?**
 
-Bugs are tracked as [GitHub issues](https://github.com/yourname/mongo-s3-dump/issues). Explain the problem and include additional details to help maintainers reproduce the problem:
+Bugs are tracked as [GitHub issues](https://github.com/VeniMitev/Mongo-S3-Dump/issues). Explain the problem and include additional details to help maintainers reproduce the problem:
 
 * **Use a clear and descriptive title** for the issue to identify the problem.
 * **Describe the exact steps which reproduce the problem** in as many details as possible. When listing steps, **don't just say what you did, but explain how you did it**.
@@ -51,7 +43,7 @@ This section guides you through submitting an enhancement suggestion, including 
 
 **How Do I Submit A (Good) Enhancement Suggestion?**
 
-Enhancement suggestions are tracked as [GitHub issues](https://github.com/yourname/mongo-s3-dump/issues). Provide the following information:
+Enhancement suggestions are tracked as [GitHub issues](https://github.com/VeniMitev/Mongo-S3-Dump/issues). Provide the following information:
 
 * **Use a clear and descriptive title** for the issue to identify the suggestion.
 * **Provide a step-by-step description of the suggested enhancement** in as many details as possible.
@@ -64,12 +56,11 @@ Enhancement suggestions are tracked as [GitHub issues](https://github.com/yourna
 
 Unsure where to begin contributing to Mongo S3 Dump? You can start by looking through these `beginner` and `help-wanted` issues:
 
-* [Beginner issues](https://github.com/yourname/mongo-s3-dump/issues?q=is%3Aissue+is%3Aopen+label%3Abeginner) - issues which should only require a few lines of code, and a test or two.
-* [Help wanted issues](https://github.com/yourname/mongo-s3-dump/issues?q=is%3Aissue+is%3Aopen+label%3A%22help+wanted%22) - issues which should be a bit more involved than `beginner` issues.
+* [Beginner issues](https://github.com/VeniMitev/Mongo-S3-Dump/issues?q=is%3Aissue+is%3Aopen+label%3Abeginner) - issues which should only require a few lines of code, and a test or two.
+* [Help wanted issues](https://github.com/VeniMitev/Mongo-S3-Dump/issues?q=is%3Aissue+is%3Aopen+label%3A%22help+wanted%22) - issues which should be a bit more involved than `beginner` issues.
 
 ### Pull Requests
 
-* Fill in [the required template](PULL_REQUEST_TEMPLATE.md)
 * Do not include issue numbers in the PR title
 * Follow the [styleguides](#styleguides)
 * Avoid platform-dependent code
