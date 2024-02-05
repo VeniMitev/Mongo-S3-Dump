@@ -1,14 +1,13 @@
+import { S3Client } from '@aws-sdk/client-s3';
 import { Upload } from '@aws-sdk/lib-storage';
-import { S3 } from '@aws-sdk/client-s3';
+import { PassThrough } from 'stream';
 import * as child_process from 'child_process';
-import * as fs from 'fs';
-import { promisify } from 'util';
 import dotenv from 'dotenv';
 import cron from 'node-cron';
 
 dotenv.config();
 
-const exec = promisify(child_process.exec);
+// const exec = promisify(child_process.exec);
 
 async function backupMongoAndUploadToS3() {
     try {
@@ -20,52 +19,38 @@ async function backupMongoAndUploadToS3() {
 
         console.log('Backing up MongoDB...');
 
-        // MongoDB dump command
-        // Generate a date-time string in the format "YYYY-MM-DD_HH-mm-ss"
-        const dateTime = new Date()
-            .toISOString()
-            .replace(/T/, '_')
-            .replace(/:/g, '-')
-            .split('.')[0];
-
-        // Include the date-time string in the file name
-        const fileName = `dump_${dateTime}.gz`;
-        const dumpCommand = `mongodump --uri="${mongoUri}" --archive=${fileName} --gzip`;
-
-        await exec(dumpCommand);
-
-        // Initialize S3 client
-        const s3 = new S3({
+        const s3 = new S3Client({
             region,
-
-            credentials: {
-                accessKeyId,
-                secretAccessKey,
-            },
+            credentials: { accessKeyId, secretAccessKey },
         });
 
-        // Read the dump file
-        const fileContent = fs.readFileSync(fileName);
+        const dateTime = new Date().toISOString().replace(/T/, '_').replace(/:/g, '-').split('.')[0];
+        const fileName = `dump_${dateTime}.gz`;
+        const dumpCommand = `mongodump --uri="${mongoUri}" --gzip --archive`;
 
-        // Upload to S3
-        const params = {
-            Bucket: s3Bucket,
-            Key: `mongo-backup/${fileName}`,
-            Body: fileContent,
-        };
+        const pass = new PassThrough();
+        const dumpProcess = child_process.spawn('sh', ['-c', dumpCommand]);
+        dumpProcess.stdout.pipe(pass);
 
-        await new Upload({
+        const upload = new Upload({
             client: s3,
-            params,
-        }).done();
+            params: {
+                Bucket: s3Bucket,
+                Key: `mongo-backup/${fileName}`,
+                Body: pass,
+            },
+            leavePartsOnError: false, // recommended to cleanup multipart uploads if they fail
+        });
 
+        upload.on('httpUploadProgress', (progress) => {
+            console.log(`Upload progress: ${progress.loaded} of ${progress.total} bytes`);
+        });
+
+        await upload.done();
         console.log('Upload complete.');
 
-        fs.unlinkSync(fileName);
-
-        console.log('Deleted temp dump file.');
     } catch (err) {
-        console.log(err);
+        console.error('Error:', err);
     }
 }
 
