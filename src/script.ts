@@ -7,16 +7,14 @@ import cron from 'node-cron';
 
 dotenv.config();
 
-// const exec = promisify(child_process.exec);
+const region = process.env.AWS_REGION;
+const mongoUri = process.env.MONGO_URI;
+const s3Bucket = process.env.S3_BUCKET;
+const accessKeyId = process.env.AWS_ACCESS_KEY_ID;
+const secretAccessKey = process.env.AWS_SECRET_ACCESS_KEY;
 
 async function backupMongoAndUploadToS3() {
     try {
-        const region = process.env.AWS_REGION;
-        const mongoUri = process.env.MONGO_URI;
-        const s3Bucket = process.env.S3_BUCKET;
-        const accessKeyId = process.env.AWS_ACCESS_KEY_ID;
-        const secretAccessKey = process.env.AWS_SECRET_ACCESS_KEY;
-
         console.log('Backing up MongoDB...');
 
         const s3 = new S3Client({
@@ -24,7 +22,11 @@ async function backupMongoAndUploadToS3() {
             credentials: { accessKeyId, secretAccessKey },
         });
 
-        const dateTime = new Date().toISOString().replace(/T/, '_').replace(/:/g, '-').split('.')[0];
+        const dateTime = new Date()
+            .toISOString()
+            .replace(/T/, '_')
+            .replace(/:/g, '-')
+            .split('.')[0];
         const fileName = `dump_${dateTime}.gz`;
         const dumpCommand = `mongodump --uri="${mongoUri}" --gzip --archive`;
 
@@ -43,19 +45,24 @@ async function backupMongoAndUploadToS3() {
         });
 
         upload.on('httpUploadProgress', (progress) => {
-            console.log(`Upload progress: ${progress.loaded} of ${progress.total} bytes`);
+            console.log(
+                `Upload progress: ${progress.loaded} of ${progress.total} bytes`
+            );
         });
 
         await upload.done();
         console.log('Upload complete.');
-
     } catch (err) {
         console.error('Error:', err);
     }
 }
 
 // Cron schedule from environment variable
-const cronSchedule = process.env.CRON_SCHEDULE || 'none';
+const cronSchedule = process.env.CRON_SCHEDULE;
+
+if (!cronSchedule) {
+    throw new Error('CRON_SCHEDULE environment variable is not set.');
+}
 
 // cron regex
 const cronRegex =
